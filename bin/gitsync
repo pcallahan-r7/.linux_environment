@@ -14,7 +14,7 @@ sync_repo() {
 
     printf '%s\n' "$repo"
 
-    if git -C "$repo" fetch --all; then
+    if git -C "$repo" fetch --all --quiet; then
         current_branch=$(git -C "$repo" symbolic-ref -q --short HEAD) || current_branch=
         branches=(main develop master)
         case $current_branch in
@@ -44,11 +44,13 @@ sync_repo() {
             fi
 
             if [[ $current_branch == "$branch" ]]; then
-                if ! git -C "$repo" merge --ff-only "$upstream"; then
+                if git -C "$repo" merge --ff-only --quiet "$upstream"; then
+                    printf '  %s: fast forwarded\n' "$branch"
+                else
                     printf '  %s: fast forward failed\n' "$branch" >&2
                     failed=1
                 fi
-            elif git -C "$repo" branch --force "$branch" "$upstream"; then
+            elif git -C "$repo" branch --force --quiet "$branch" "$upstream"; then
                 printf '  %s: fast forwarded\n' "$branch"
             else
                 printf '  %s: fast forward failed\n' "$branch" >&2
