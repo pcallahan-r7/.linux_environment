@@ -19,8 +19,13 @@ while IFS= read -r -d '' git_dir; do
     fi
 
     current_branch=$(git -C "$repo" symbolic-ref -q --short HEAD) || current_branch=
+    branches=(main develop master)
+    case $current_branch in
+        ''|main|develop|master) ;;
+        *) branches+=("$current_branch") ;;
+    esac
 
-    for branch in main develop master; do
+    for branch in "${branches[@]}"; do
         if ! git -C "$repo" show-ref --verify --quiet "refs/heads/$branch"; then
             continue
         fi
