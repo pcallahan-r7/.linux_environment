@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+if [[ $# -ne 1 || ! -d $1 ]]; then
+    printf 'Usage: %s DIRECTORY\n' "${0##*/}" >&2
+    exit 2
+fi
+
+root=$(cd -- "$1" && pwd -P) || exit 2
+failed=0
+
+while IFS= read -r -d '' git_dir; do
+    repo=${git_dir%/.git}
+    printf '%s\n' "$repo"
+
+    if ! git -C "$repo" fetch --all; then
+        printf '  fetch failed; skipping branches\n' >&2
+        failed=1
+        continue
+    fi
+
+    current_branch=$(git -C "$repo" symbolic-ref -q --short HEAD) || current_branch=
+
+    for branch in main develop master; do
+        if ! git -C "$repo" show-ref --verify --quiet "refs/heads/$branch"; then
+            continue
+        fi
+
+        if ! upstream=$(git -C "$repo" rev-parse --verify --quiet "${branch}@{upstream}^{commit}" 2>/dev/null); then
+            printf '  %s: no available upstream; skipping\n' "$branch"
+            continue
+        fi
+
+        local_head=$(git -C "$repo" rev-parse "refs/heads/$branch")
+        if [[ $local_head == "$upstream" ]]; then
+            printf '  %s: up to date\n' "$branch"
+            continue
+        fi
+
+        if ! git -C "$repo" merge-base --is-ancestor "$local_head" "$upstream"; then
+            printf '  %s: diverged from upstream; skipping\n' "$branch"
+            continue
+        fi
+
+        if [[ $current_branch == "$branch" ]]; then
+            if ! git -C "$repo" merge --ff-only "$upstream"; then
+                printf '  %s: fast forward failed\n' "$branch" >&2
+                failed=1
+            fi
+        elif git -C "$repo" branch --force "$branch" "$upstream"; then
+            printf '  %s: fast forwarded\n' "$branch"
+        else
+            printf '  %s: fast forward failed\n' "$branch" >&2
+            failed=1
+        fi
+    done
+done < <(find "$root" -name .git -prune -print0)
+
+exit "$failed"
