@@ -2,3 +2,5 @@
 completion/
 .zsh_history
 zsh-autosuggestions/
+.zsh_sessions/
+.zsh_history.bak-*

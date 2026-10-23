@@ -11,5 +11,5 @@ export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
 #check_installed /usr/local/opt/bash-completion/etc/bash_completion bash-completion
 #. /usr/local/opt/bash-completion/etc/bash_completion
 
-export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
+export JAVA_HOME="$(/usr/libexec/java_home 2>/dev/null)"
 export HOMEBREW_NO_AUTO_UPDATE=1

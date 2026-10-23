@@ -57,7 +57,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-[[ -f ~//.bash_aliases ]] && source ~//.bash_aliases
 [[ -f ~/.linux_environment/bash/.bash_aliases ]] && source ~/.linux_environment/bash/.bash_aliases
 
 
@@ -103,14 +102,5 @@ fi
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 
-PATH=${JAVA_HOME}/bin:${PATH}
-export PATH="$HOME/.cargo/bin:$PATH"
-
-export XTCELL_SRC_ROOT=~/dev/tcell
-export XTCELL_DEV_SERVER=minty.local
-
-setpowerline
-
-
-export AWS_PROFILE=awsaml-606696011804
-export AWS_DEFAULT_PROFILE=awsaml-606696011804
+[[ -n "$JAVA_HOME" ]] && PATH=${JAVA_HOME}/bin:${PATH}
+[[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"

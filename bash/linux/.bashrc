@@ -14,4 +14,4 @@ export HISTFILE=~/.bash_eternal_history
 
 
 export JAVA_HOME=`java -XshowSettings:properties -version 2>&1    | sed '/^[[:space:]]*java\.home/!d;s/^[[:space:]]*java\.home[[:space:]]*=[[:space:]]*//'`
-export PATH=/home/pcallahan/.local/bin:${PATH:+:${PATH}}
+export PATH=${HOME}/.local/bin${PATH:+:${PATH}}
