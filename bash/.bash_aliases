@@ -4,6 +4,10 @@ alias startportainer="docker run --name portainer --privileged -d -p 9000:9000 -
 alias chrome-insecure="'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --disable-web-security --user-data-dir=${HOME}/dev/chrome_data_dir --no-default-browser-check"
 alias k="kubectl"
 alias kpods="kubectl get pods"
+alias mongosh-nonprod='mongosh "mongodb+srv://us-non-prod.mbaexz.mongodb.net/" --username paul_c'
+alias mongosh-prod='mongosh "mongodb+srv://lt-cs.1wgmb.mongodb.net/" --username paul_mongosh'
+alias mongosh-prod-a='mongosh "mongodb+srv://prod-a.1wgmb.mongodb.net/"  --username paul_mongosh'
+alias mongosh-prod-ht='mongosh "mongodb+srv://ht-ncs.1wgmb.mongodb.net/"  --username paul_mongosh'
 
 # gcloud GKE get-credentials: ALIAS  CLUSTER / REGION
 alias kube-eu-prod='gcloud container clusters get-credentials "eu-prod-gke-cluster" --location "europe-west1" --project gstore-production'
@@ -22,3 +26,6 @@ alias k8sproxy="kubectl run --restart=Never --image=alpine/socat temp-paul -- -d
 alias activate-nvm=". $NVM_DIR/nvm.sh"
 alias git-gone="git branch -vv | grep \": gone]\" | awk '{ print $1 }' | xargs -n 1 git branch -D"
 
+#####
+alias set-cdn-key-qa='export FLOORPLAN_API_KEY=$(gcloud secrets versions access latest --secret floorplan-map-development-api-keys --project gstore-development)'
+alias set-cdn-server-qa='export FLOORPLAN_SERVER="https://floorplan-map-development-wyvzevyrta-uc.a.run.app"'

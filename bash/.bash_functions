@@ -9,6 +9,13 @@ findx() {
     find "$1" -name "$2" 2>&1 >files_and_folders | grep -v 'Permission denied' >&2
 }
 
+zipclean() {
+    command zip "$@" \
+        -x '.DS_Store' '*/.DS_Store' \
+           '__MACOSX' '__MACOSX/*' \
+           '*/__MACOSX' '*/__MACOSX/*'
+}
+
 nukenoneimages() {
     docker rmi -f "$(docker images | grep '<none>' | awk '{print $3}' | grep -v CONTAINER)"
 }
